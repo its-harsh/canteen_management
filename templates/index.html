@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30" />
+    <title>All orders</title>
+</head>
+
+<body>
+    <h1>All Orders</h1>
+    <!-- this for loop returns all object form modelapp.TotalFoodOrder -->
+    <!-- which stores all order to be prepared by chef -->
+    {% for i in orders %}
+    <!-- this prints food name -->
+    <h2>{{i.food}}</h2>
+    <!-- this prints total no orders to be prepared by chef of above dish -->
+    <p>{{i.no_of_orders}}</p>
+    <!-- end for loop -->
+    {% endfor %}
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Dashboard</h1>
+    <div id="root">
+        <div id="user-detail">
+
+        </div>
+        <form id="form">
+
+        </form>
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        var user_detail = document.getElementById('user-detail');
+        var form = document.getElementById('form');
+        var post_request_arg = {}
+        // getting event from main.js
+        ipcRenderer.on('user-detail', (event, arg) => {
+            user_detail.innerHTML =
+                `<h3>${arg.username}</h3>
+                <p>${arg.first_name} ${arg.last_name}</p>
+                <p>${arg.email}</p>
+                <br><br>`
+            post_request_arg.user = arg.id;
+            post_request_arg.delivered = false;
+            post_request_arg.food_orders = [];
+        });
+        //getting event from main.js
+        ipcRenderer.on('all-food-detail', (event, arg) => {
+            var form_html = `<h1>You must order as much as you eat</h1>
+                            <p>You can select multiple food-items</p><br>`;
+            arg.forEach(result => {
+                form_html = form_html + `
+                    <div class='food'>
+                        <label for='${result.id}'>Select if you want to order <b>${result.food_name}</b></label>
+                        <input type='checkbox' class='checkbox' id='${result.id}'>
+                        <p>Food Type: ${result.food_type}</p>
+                        <p>Ingredients: ${result.food_content}</p>
+                        <p>Vegeterian: ${result.veg_or_non}</p>
+                        <p>Price: ${result.food_price}$ Discount: ${result.discount}% Tax: ${result.tax}%</p>
+                        <label for='${result.id}_count'>No of Units: </label>
+                        <input type='number' id='${result.id}_count'>
+                    </div>
+                    <br><br>`
+            });
+            form_html = form_html + `<input type='submit', value='Order'>`;
+            form.innerHTML = form_html;
+        });
+
+        form.addEventListener('submit', () => {
+            var checkboxes = [...document.getElementsByClassName('checkbox')];
+            var send_array = [];
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    send_array.push(checkbox);
+                }
+            })
+            console.log(send_array);
+            send_array.forEach((food) => {
+                post_request_arg.food_orders.push({
+                    'food': parseInt(food.id),
+                    'count': parseInt(document.getElementById(`${food.id}_count`).value)
+                });
+            });
+            if (post_request_arg.food_orders.length !== 0) {
+                // sending event to main.js
+                ipcRenderer.send('order', post_request_arg);
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

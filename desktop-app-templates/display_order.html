@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Display Order</title>
+</head>
+
+<body>
+    <div id="order">
+
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        var order_detail = document.getElementById('order');
+        // geeting event from main.js
+        ipcRenderer.on('order-data', (event, arg) => {
+            var inner_html = `<h1>Order Summary</h1><br>`
+            var total_bill = 0;
+            arg.food_orders.forEach((order) => {
+                inner_html = inner_html +
+                    `<div class='food'>
+                        <p>${order.food.food_name}</p>
+                        <p>Price : ${order.food.food_price}$, Discount: ${order.food.discount}%, Tax: ${order.food.tax}%</p>
+                        <p>Vegeterian ${order.food.veg_or_non}<p>
+                    </div><br><br>`
+                total_bill = total_bill + order.count * order.food.food_price * ((100 - order.food.discount) / 100) * ((100 + order.food.tax) / 100)
+            });
+            inner_html = inner_html + `<p>Bill Amount: ${total_bill}$</p>`
+            order_detail.innerHTML = inner_html;
+        });
+    </script>
+</body>
+
+</html>

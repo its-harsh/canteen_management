@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Register</title>
+</head>
+
+<body>
+    <h1>Register</h1>
+    <form id="register-form">
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="email" id="email" placeholder="Email"><br><br>
+        <input type="text" id="first_name" placeholder="First Name"><br><br>
+        <input type="text" id="last_name" placeholder="Last Name"><br><br>
+        <input type="password" id="password" placeholder="Password"><br><br>
+        <input type="password" id="confirm_password" placeholder="Confirm Password"><br><br>
+        <input type="submit" value="Register"><br><br>
+    </form>
+    <script>
+        const { ipcRenderer } = require('electron');
+        var login_btn = document.getElementById('login-btn');
+        var register_form = document.getElementById('register-form');
+        register_form.addEventListener('submit', function () {
+            passsword_ = document.getElementById("password").value
+            confirm_password = document.getElementById("confirm_password").value
+            if (passsword_ === confirm_password) {
+                // sending event to main.js
+                ipcRenderer.send('registeration-request', {
+                    username: document.getElementById("username").value,
+                    email: document.getElementById("email").value,
+                    first_name: document.getElementById("first_name").value,
+                    last_name: document.getElementById("last_name").value,
+                    password: passsword_
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
