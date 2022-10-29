@@ -13,11 +13,10 @@
     </form>
     <button id="register-btn">Register</button>
     <script>
-        const { ipcRenderer } = require('electron');
         var login_form = document.getElementById('login');
         login_form.addEventListener('submit', function () {
             // sending event to main.js
-            ipcRenderer.send('login-request', {
+            window.api.send('login-request', {
                 username: document.getElementById("username").value,
                 password: document.getElementById("password").value
             });
@@ -25,7 +24,7 @@
         var register_btn = document.getElementById('register-btn');
         register_btn.addEventListener('click', function () {
             // sending event to main.js
-            ipcRenderer.send('registeration-request-form');
+            window.api.send('registeration-request-form', {});
         });
     </script>
 </body>

@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const axios = require('axios');
+const path = require('path')
 
 var auth_token = '';
 var username = '';
@@ -11,7 +12,10 @@ function showWindow() {
         width: 1000,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: false,
+            contextIsolation: true,
+            enableRemoteModule: false,
+            preload: path.join(__dirname, "preload.js")
         },
     });
     // loding login.html
@@ -46,8 +50,11 @@ function showRegisteration() {
         width: 1000,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
-        },
+            nodeIntegration: false,
+            contextIsolation: true,
+            enableRemoteModule: false,
+            preload: path.join(__dirname, "preload.js")
+        }
     });
 
     win.loadFile('desktop-app-templates/register.html');
@@ -75,8 +82,11 @@ function showdashboardWindow() {
         width: 1000,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
-        },
+            nodeIntegration: false,
+            contextIsolation: true,
+            enableRemoteModule: false,
+            preload: path.join(__dirname, "preload.js")
+        }
     });
 
     win.loadFile('desktop-app-templates/dashboard.html');

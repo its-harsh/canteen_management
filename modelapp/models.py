@@ -23,7 +23,7 @@ class Food(models.Model):
 
 class TotalFoodOrder(models.Model):
     # there is all details of total food ordered and to be prepared by chef with name
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    food = models.OneToOneField(Food, on_delete=models.CASCADE)
     no_of_orders = models.IntegerField(
         verbose_name='No of Orders for this food', default=0
     )
@@ -48,8 +48,9 @@ class UserFoodOrder(models.Model):
             total_food_order = TotalFoodOrder.objects.get(food=self.food)
         except TotalFoodOrder.DoesNotExist:
             total_food_order = TotalFoodOrder.objects.create(food=self.food)
-        total_food_order.no_of_orders += self.count
-        total_food_order.save()
+        if not self.delivered:
+            total_food_order.no_of_orders += self.count
+            total_food_order.save()
         return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 
@@ -72,5 +73,8 @@ class UserOrder(models.Model):
         if self.delivered:
             for i in self.food_orders.all():
                 i.delivered = True
+                totalfoodorder = i.food.totalfoodorder
+                totalfoodorder.no_of_orders -= i.count
+                totalfoodorder.save()
                 i.save()
         return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)

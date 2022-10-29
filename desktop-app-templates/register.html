@@ -17,7 +17,6 @@
         <input type="submit" value="Register"><br><br>
     </form>
     <script>
-        const { ipcRenderer } = require('electron');
         var login_btn = document.getElementById('login-btn');
         var register_form = document.getElementById('register-form');
         register_form.addEventListener('submit', function () {
@@ -25,7 +24,7 @@
             confirm_password = document.getElementById("confirm_password").value
             if (passsword_ === confirm_password) {
                 // sending event to main.js
-                ipcRenderer.send('registeration-request', {
+                window.api.send('registeration-request', {
                     username: document.getElementById("username").value,
                     email: document.getElementById("email").value,
                     first_name: document.getElementById("first_name").value,

@@ -16,12 +16,11 @@
         </form>
     </div>
     <script>
-        const { ipcRenderer } = require('electron');
         var user_detail = document.getElementById('user-detail');
         var form = document.getElementById('form');
         var post_request_arg = {}
         // getting event from main.js
-        ipcRenderer.on('user-detail', (event, arg) => {
+        window.api.receive('user-detail', (arg) => {
             user_detail.innerHTML =
                 `<h3>${arg.username}</h3>
                 <p>${arg.first_name} ${arg.last_name}</p>
@@ -32,7 +31,7 @@
             post_request_arg.food_orders = [];
         });
         //getting event from main.js
-        ipcRenderer.on('all-food-detail', (event, arg) => {
+        window.api.receive('all-food-detail', (arg) => {
             var form_html = `<h1>You must order as much as you eat</h1>
                             <p>You can select multiple food-items</p><br>`;
             arg.forEach(result => {
@@ -70,7 +69,7 @@
             });
             if (post_request_arg.food_orders.length !== 0) {
                 // sending event to main.js
-                ipcRenderer.send('order', post_request_arg);
+                window.api.send('order', post_request_arg);
             }
         });
 

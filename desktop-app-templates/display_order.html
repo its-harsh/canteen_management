@@ -10,10 +10,9 @@
 
     </div>
     <script>
-        const { ipcRenderer } = require('electron');
         var order_detail = document.getElementById('order');
         // geeting event from main.js
-        ipcRenderer.on('order-data', (event, arg) => {
+        window.api.receive('order-data', (arg) => {
             var inner_html = `<h1>Order Summary</h1><br>`
             var total_bill = 0;
             arg.food_orders.forEach((order) => {
